@@ -32,20 +32,33 @@ struct ChartView: View {
             ScrollView(.vertical, showsIndicators: false) {
                 
                 VStack {
-                    ZStack {
-                        LineGraph(dataPoints: cvvm.numberOfCases.reversed().normalized)
-                            .trim(to: animateChart ? 1 : 0)
-                            .stroke(Color.blue)
-                            .frame(width: UIScreen.main.bounds.width - 20, height: 300)
-                            .onAppear {
-                                withAnimation(.easeInOut(duration: 2)) {
-                                    animateChart = true
+                    
+                    HStack {
+                        VStack {
+                            Text(String(format: "%.0f", cvvm.numberOfCases.max() ?? 0))
+                                .font(.footnote)
+                            Spacer()
+                            Text(String(format: "%.0f", cvvm.numberOfCases.min() ?? 0))
+                                .font(.footnote)
+                        }
+                        Divider()
+                        ZStack {
+                            LineGraph(dataPoints: cvvm.numberOfCases.reversed().normalized)
+                                .trim(to: animateChart ? 1 : 0)
+                                .stroke(Color.blue)
+                                .frame(width: UIScreen.main.bounds.width - 60, height: 300)
+                                .onAppear {
+                                    withAnimation(.easeInOut(duration: 2)) {
+                                        animateChart = true
+                                    }
                                 }
+                            if cvvm.inProgress {
+                                ChartLoader()
                             }
-                        if cvvm.inProgress {
-                            ChartLoader()
                         }
                     }
+                
+                    Divider()
                     
                     Picker("", selection: $cvvm.chartNumberOfDaysTab) {
                         Text("30 Days").tag(0)
