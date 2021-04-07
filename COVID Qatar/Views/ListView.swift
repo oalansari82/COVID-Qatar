@@ -28,6 +28,7 @@ struct ListView: View {
                     
                     if self.lvm.inProgress == true {
                         ProgressView()
+                            .scaleEffect(1.5)
                     }
                 }
                 .navigationBarTitle("Historical Data")

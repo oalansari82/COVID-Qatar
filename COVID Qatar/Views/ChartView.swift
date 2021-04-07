@@ -51,7 +51,9 @@ struct ChartView: View {
                     Picker("", selection: $cvvm.chartNumberOfDaysTab) {
                         Text("30 Days").tag(0)
                         Text("90 Days").tag(1)
-                        Text("All").tag(2)
+                        if cvvm.chartPositiveOrDeathTab != 2 {
+                            Text("All").tag(2)
+                        }
                     }.pickerStyle(SegmentedPickerStyle())
                     .padding()
                     .onChange(of: cvvm.chartNumberOfDaysTab) { (_) in
@@ -61,6 +63,7 @@ struct ChartView: View {
                     Picker("", selection: $cvvm.chartPositiveOrDeathTab) {
                         Text("Positive Cases").tag(0)
                         Text("Death Cases").tag(1)
+                        Text("Percent Positive").tag(2)
                     }.pickerStyle(SegmentedPickerStyle())
                     .padding([.horizontal])
                     .onChange(of: cvvm.chartPositiveOrDeathTab, perform: { _ in
@@ -70,7 +73,7 @@ struct ChartView: View {
                     HStack {
                         Spacer()
                         VStack {
-                            Text(String(format: "%.0f", cvvm.numberOfCases.min() ?? 0))
+                            Text(String(format: "%.0f", cvvm.numberOfCases.min() ?? 0) + "\(cvvm.chartPositiveOrDeathTab == 2 ? "%" : "")")
                                 .font(.title)
                             Text("Min")
                                 .font(.headline)
@@ -78,9 +81,17 @@ struct ChartView: View {
                         }
                         Spacer()
                         VStack {
-                            Text(String(format: "%.0f", cvvm.numberOfCases.max() ?? 0))
+                            Text(String(format: "%.0f", cvvm.numberOfCases.max() ?? 0) + "\(cvvm.chartPositiveOrDeathTab == 2 ? "%" : "")")
                                 .font(.title)
                             Text("Max")
+                                .font(.headline)
+                                .foregroundColor(.secondary)
+                        }
+                        Spacer()
+                        VStack {
+                            Text(String(format: "%.0f", cvvm.numberOfCases.first ?? 0) + "\(cvvm.chartPositiveOrDeathTab == 2 ? "%" : "")")
+                                .font(.title)
+                            Text("Latest")
                                 .font(.headline)
                                 .foregroundColor(.secondary)
                         }
@@ -118,7 +129,7 @@ class ChartViewViewModel: ObservableObject {
             switch results {
             case .success(let data):
                 data.records.forEach { record in
-                    self.numberOfCases.append(self.chartPositiveOrDeathTab == 0 ? CGFloat(record.fields.numberOfNewPositiveCasesInLast24Hrs ?? 0) : CGFloat(record.fields.numberOfNewDeathsInLast24Hrs ?? 0))
+                    self.numberOfCases.append(self.chartPositiveOrDeathTab == 0 ? CGFloat(record.fields.numberOfNewPositiveCasesInLast24Hrs ?? 0) : self.chartPositiveOrDeathTab == 1 ? CGFloat(record.fields.numberOfNewDeathsInLast24Hrs ?? 0) : (CGFloat(record.fields.numberOfNewPositiveCasesInLast24Hrs ?? 0) / CGFloat(record.fields.numberOfNewTestsInLast24Hrs ?? 0)) * 100)
                 }
                 self.inProgress = false
             case .failure(let err):

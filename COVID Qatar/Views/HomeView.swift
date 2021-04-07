@@ -45,6 +45,7 @@ struct HomeView: View {
                 
                 if self.hvm.inProgress == true {
                     ProgressView()
+                        .scaleEffect(1.5)
                 }
             }
             .navigationTitle("COVID-19")
