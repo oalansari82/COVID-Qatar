@@ -11,7 +11,6 @@ import Combine
 
 struct ChartView: View {
     
-    @Environment(\.presentationMode) var presentation
     @ObservedObject var cvvm = ChartViewViewModel()
     @State private var animateChart = false
     
@@ -63,7 +62,9 @@ struct ChartView: View {
                     Picker("", selection: $cvvm.chartPositiveOrDeathTab) {
                         Text("Positive Cases").tag(0)
                         Text("Death Cases").tag(1)
-                        Text("Percent Positive").tag(2)
+                        if cvvm.chartNumberOfDaysTab != 2 {
+                            Text("Percent Positive").tag(2)
+                        }
                     }.pickerStyle(SegmentedPickerStyle())
                     .padding([.horizontal])
                     .onChange(of: cvvm.chartPositiveOrDeathTab, perform: { _ in
@@ -76,7 +77,7 @@ struct ChartView: View {
                             Text(String(format: "%.0f", cvvm.numberOfCases.min() ?? 0) + "\(cvvm.chartPositiveOrDeathTab == 2 ? "%" : "")")
                                 .font(.title)
                             Text("Min")
-                                .font(.headline)
+                                .font(.footnote)
                                 .foregroundColor(.secondary)
                         }
                         Spacer()
@@ -84,7 +85,7 @@ struct ChartView: View {
                             Text(String(format: "%.0f", cvvm.numberOfCases.max() ?? 0) + "\(cvvm.chartPositiveOrDeathTab == 2 ? "%" : "")")
                                 .font(.title)
                             Text("Max")
-                                .font(.headline)
+                                .font(.footnote)
                                 .foregroundColor(.secondary)
                         }
                         Spacer()
@@ -92,7 +93,7 @@ struct ChartView: View {
                             Text(String(format: "%.0f", cvvm.numberOfCases.first ?? 0) + "\(cvvm.chartPositiveOrDeathTab == 2 ? "%" : "")")
                                 .font(.title)
                             Text("Latest")
-                                .font(.headline)
+                                .font(.footnote)
                                 .foregroundColor(.secondary)
                         }
                         Spacer()
@@ -110,56 +111,3 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
-class ChartViewViewModel: ObservableObject {
-    
-    private var serviceAPI = ServicesAPI()
-    @Published var inProgress = false
-    @Published var numberOfCases = [CGFloat]()
-    @Published var chartNumberOfDaysTab = 1
-    @Published var chartPositiveOrDeathTab = 0
-    
-    init() {
-        fetchData()
-    }
-    
-    func fetchData() {
-        inProgress = true
-        numberOfCases.removeAll()
-        serviceAPI.fetchData(numberOfDays: chartNumberOfDaysTab == 0 ? 30 : chartNumberOfDaysTab == 1 ? 90 : -1) { results in
-            switch results {
-            case .success(let data):
-                data.records.forEach { record in
-                    self.numberOfCases.append(self.chartPositiveOrDeathTab == 0 ? CGFloat(record.fields.numberOfNewPositiveCasesInLast24Hrs ?? 0) : self.chartPositiveOrDeathTab == 1 ? CGFloat(record.fields.numberOfNewDeathsInLast24Hrs ?? 0) : (CGFloat(record.fields.numberOfNewPositiveCasesInLast24Hrs ?? 0) / CGFloat(record.fields.numberOfNewTestsInLast24Hrs ?? 0)) * 100)
-                }
-                self.inProgress = false
-            case .failure(let err):
-                self.inProgress = false
-                print(err.localizedDescription)
-            }
-        }
-    }
-}
-
-
-struct ChartLoader: View {
-    
-    @State var isAtMaxScale = false
-    private let animation = Animation.easeInOut(duration: 1).repeatForever(autoreverses: true)
-    private var maxScale: CGFloat = 1.5
-    
-    var body: some View {
-        VStack {
-            Text("Loading")
-                .font(.system(size: 16))
-            RoundedRectangle(cornerRadius: 25.0)
-                .fill(Color.blue)
-                .frame(width: UIScreen.main.bounds.width / 2, height: 3)
-                .scaleEffect(CGSize(width: isAtMaxScale ? maxScale : 0.01, height: 1))
-                .onAppear {
-                    withAnimation(animation) {
-                        self.isAtMaxScale.toggle()
-                    }
-                }
-        }
-    }
-}

@@ -64,43 +64,82 @@ struct ListView_Item: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack {
+                VStack(spacing: 0) {
+                    Text(cleanYear(string: date))
+                        .font(.footnote)
+                    Text(cleanDay(string: date))
+                        .font(.title3)
+                    Text(cleanMonth(string: date))
+                        .font(.caption)
+                }
+                .padding(.horizontal)
+                .padding(.vertical, 5)
+                .background(Color(.systemGray3))
+                .cornerRadius(10)
+                .foregroundColor(.white)
                 Spacer()
-                Text(date)
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-            }
-            HStack {
                 VStack {
                     Text("\(numberOfNewTestsInLast24Hrs)")
-                        .font(.system(size: 33, weight: .medium))
+                        .font(.title)
                     Text("Tested")
-                        .font(.subheadline)
+                        .font(.footnote)
                         .foregroundColor(.secondary)
                 }
                 Spacer()
                 VStack {
                     Text("\(numberOfPositiveCasesIn24Hrs)")
-                        .font(.system(size: 33, weight: .medium))
+                        .font(.title)
                     Text("Positive")
-                        .font(.subheadline)
+                        .font(.footnote)
                         .foregroundColor(.secondary)
                 }
                 Spacer()
                 VStack {
                     Text("\(numberOfNewDeathsInLast24Hrs)")
-                        .font(.system(size: 33, weight: .medium))
+                        .font(.title)
                     Text("Death")
-                        .font(.subheadline)
+                        .font(.footnote)
                         .foregroundColor(.secondary)
                 }
-                
+                Spacer()
                 Image(systemName: "chevron.right")
                     .foregroundColor(.secondary)
-            }.padding()
+            }.padding(.bottom, 10)
             
             Divider()
         }
         .frame(maxWidth: .infinity)
         .padding(.horizontal)
+    }
+    
+    func cleanMonth(string: String) -> String {
+        var newString = string
+        newString.removeLast(3)
+        newString.removeFirst(5)
+        switch newString {
+        case "01": return "JAN"
+        case "02": return "FEB"
+        case "03": return "MAR"
+        case "04": return "APR"
+        case "05": return "MAY"
+        case "06": return "JUN"
+        case "07": return "JUL"
+        case "08": return "AUG"
+        case "09": return "SEP"
+        case "10": return "OCT"
+        case "11": return "NOV"
+        case "12": return "DEC"
+        default: return ""
+        }
+    }
+    func cleanDay(string: String) -> String {
+        var newString = string
+        newString.removeFirst(8)
+        return newString
+    }
+    func cleanYear(string: String) -> String {
+        var newString = string
+        newString.removeLast(6)
+        return newString
     }
 }
