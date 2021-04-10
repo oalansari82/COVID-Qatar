@@ -5,7 +5,7 @@
 //  Created by Omar Al-Ansari on 4/5/21.
 //
 
-import Foundation
+import SwiftUI
 
 class ListViewModel: ObservableObject {
     
@@ -33,5 +33,27 @@ class ListViewModel: ObservableObject {
                 return
             }
         }
+    }
+    
+    func getMaxTests() -> CGFloat {
+        var allTests: [Int] = []
+        if !data.isEmpty {
+            allTests = data.map { ($0.numberOfNewTestsInLast24Hrs ?? 0) }
+        }
+        return CGFloat(allTests.max() ?? 0)
+    }
+    func getMaxPositive() -> CGFloat {
+        var allTests: [Int] = []
+        if !data.isEmpty {
+            allTests = data.map { ($0.numberOfNewPositiveCasesInLast24Hrs ?? 0) }
+        }
+        return CGFloat(allTests.max() ?? 0)
+    }
+    func getMaxDeaths() -> CGFloat {
+        var allTests: [Int] = []
+        if !data.isEmpty {
+            allTests = data.map { ($0.numberOfNewDeathsInLast24Hrs ?? 0) }
+        }
+        return CGFloat(allTests.max() ?? 0)
     }
 }

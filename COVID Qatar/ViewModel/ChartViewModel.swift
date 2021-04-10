@@ -14,6 +14,7 @@ class ChartViewViewModel: ObservableObject {
     @Published var numberOfCases = [CGFloat]()
     @Published var chartNumberOfDaysTab = 1
     @Published var chartPositiveOrDeathTab = 0
+    @Published var chartType = 0
     
     init() {
         fetchData()

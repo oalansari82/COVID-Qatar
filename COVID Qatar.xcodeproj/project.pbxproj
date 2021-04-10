@@ -13,6 +13,7 @@
 		8536A1682610326C00BB18CA /* ChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536A1672610326C00BB18CA /* ChartViewModel.swift */; };
 		8536A1702611920F00BB18CA /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536A16F2611920F00BB18CA /* HomeViewModel.swift */; };
 		8584C624261D712B004DF9D1 /* ChartLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8584C623261D712B004DF9D1 /* ChartLoader.swift */; };
+		8584C62B26204E3A004DF9D1 /* BarChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8584C62A26204E3A004DF9D1 /* BarChart.swift */; };
 		85970F8226142EE200B09FD5 /* AlertType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85970F8126142EE200B09FD5 /* AlertType.swift */; };
 		85970F892615A93900B09FD5 /* GridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85970F882615A93900B09FD5 /* GridView.swift */; };
 		85970F932616CA2900B09FD5 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85970F922616CA2900B09FD5 /* ListView.swift */; };
@@ -33,6 +34,7 @@
 		8536A1672610326C00BB18CA /* ChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewModel.swift; sourceTree = "<group>"; };
 		8536A16F2611920F00BB18CA /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		8584C623261D712B004DF9D1 /* ChartLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartLoader.swift; sourceTree = "<group>"; };
+		8584C62A26204E3A004DF9D1 /* BarChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChart.swift; sourceTree = "<group>"; };
 		85970F8126142EE200B09FD5 /* AlertType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertType.swift; sourceTree = "<group>"; };
 		85970F882615A93900B09FD5 /* GridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridView.swift; sourceTree = "<group>"; };
 		85970F922616CA2900B09FD5 /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
@@ -101,10 +103,11 @@
 		85970FC6261C24A700B09FD5 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				85C852672605AEAE00E68B4E /* ChartView.swift */,
-				85970F882615A93900B09FD5 /* GridView.swift */,
 				8536A154260DAAFF00BB18CA /* HomeView.swift */,
+				85C852672605AEAE00E68B4E /* ChartView.swift */,
+				8584C62A26204E3A004DF9D1 /* BarChart.swift */,
 				85970F922616CA2900B09FD5 /* ListView.swift */,
+				85970F882615A93900B09FD5 /* GridView.swift */,
 				85970F992616CFD400B09FD5 /* CovidTabView.swift */,
 			);
 			path = Views;
@@ -225,6 +228,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8584C62B26204E3A004DF9D1 /* BarChart.swift in Sources */,
 				85970F9A2616CFD400B09FD5 /* CovidTabView.swift in Sources */,
 				85970FA526188BF400B09FD5 /* ServicesAPI.swift in Sources */,
 				8584C624261D712B004DF9D1 /* ChartLoader.swift in Sources */,

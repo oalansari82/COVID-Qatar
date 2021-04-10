@@ -27,6 +27,7 @@ struct CovidTabView: View {
                     Image(systemName: "clock")
                     Text("History")
                 }
+            
         }
     }
 }
