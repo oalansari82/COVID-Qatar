@@ -19,7 +19,6 @@ struct BarChart: View {
                 HStack(alignment: .bottom) {
                     ForEach(lvm.data.prefix(90), id: \.self) { record in
                         VStack {
-                            Spacer()
                             Rectangle()
                                     .frame(width: 20, height: animateChart ? (CGFloat(record.numberOfNewTestsInLast24Hrs ?? 0) / self.lvm.getMaxTests()) * 300 : 0)
                                     .foregroundColor(Color(.systemGray3))
@@ -36,12 +35,16 @@ struct BarChart: View {
                                                 .rotationEffect(.degrees(-90))
                                                 .frame(width: 70)
                                                 .offset(y: -45)
+                                                .lineLimit(1)
+                                                .minimumScaleFactor(0.5)
                                             
                                             Spacer()
                                             Text("\(record.numberOfNewTestsInLast24Hrs ?? 0)")
                                                 .font(.caption2)
                                                 .rotationEffect(.degrees(-90))
                                                 .frame(width: 70)
+                                                .lineLimit(1)
+                                                .minimumScaleFactor(0.5)
                                                 
                                             Spacer()
                                             Text("\(record.date ?? "")")
