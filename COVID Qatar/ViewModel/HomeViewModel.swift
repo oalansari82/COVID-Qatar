@@ -93,7 +93,66 @@ class HomeViewModel: ObservableObject {
         
         return whatIsHappening
     }
+    
+    func isCurrentICUCasesIncreasing() -> CasesIncrease {
+        var whatIsHappening: CasesIncrease = .equal
+        
+        if !dataSet.isEmpty {
+            let lastTwoDaysDataSet = dataSet[0..<2]
+            if let yesterday = lastTwoDaysDataSet.first?.totalNumberOfCasesUnderIcuTreatment, let theDayBeforeYesterday = lastTwoDaysDataSet.last?.totalNumberOfCasesUnderIcuTreatment {
+                if yesterday < theDayBeforeYesterday {
+                    whatIsHappening = .decreasing
+                } else if yesterday > theDayBeforeYesterday {
+                    whatIsHappening = .increasing
+                } else {
+                    whatIsHappening = .equal
+                }
+            }
+        }
+        
+        return whatIsHappening
+    }
+    
+    func isCurrentHospitalizedCasesIncreasing() -> CasesIncrease {
+        var whatIsHappening: CasesIncrease = .equal
+        
+        if !dataSet.isEmpty {
+            let lastTwoDaysDataSet = dataSet[0..<2]
+            if let yesterday = lastTwoDaysDataSet.first?.totalNumberOfAcuteCasesUnderHospitalTreatment, let theDayBeforeYesterday = lastTwoDaysDataSet.last?.totalNumberOfAcuteCasesUnderHospitalTreatment {
+                if yesterday < theDayBeforeYesterday {
+                    whatIsHappening = .decreasing
+                } else if yesterday > theDayBeforeYesterday {
+                    whatIsHappening = .increasing
+                } else {
+                    whatIsHappening = .equal
+                }
+            }
+        }
+        
+        return whatIsHappening
+    }
+    
+    func isCurrentActiveCasesIncreasing() -> CasesIncrease {
+        var whatIsHappening: CasesIncrease = .equal
+        
+        if !dataSet.isEmpty {
+            let lastTwoDaysDataSet = dataSet[0..<2]
+            if let yesterday = lastTwoDaysDataSet.first?.totalNumberOfActiveCasesUndergoingTreatmentToDate, let theDayBeforeYesterday = lastTwoDaysDataSet.last?.totalNumberOfActiveCasesUndergoingTreatmentToDate {
+                if yesterday < theDayBeforeYesterday {
+                    whatIsHappening = .decreasing
+                } else if yesterday > theDayBeforeYesterday {
+                    whatIsHappening = .increasing
+                } else {
+                    whatIsHappening = .equal
+                }
+            }
+        }
+        
+        return whatIsHappening
+    }
+    
 }
+
 
 enum CasesIncrease {
     case increasing

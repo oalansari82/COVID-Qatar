@@ -29,15 +29,15 @@ struct HomeView: View {
                         
                         HomeViewRow(leftValue: Int( hvm.latestDaySnapshot.totalNumberOfVaccineDosesAdministeredSinceStart ?? "") ?? 0, leftText: "Total Vaccines Given\nإجمالي عدد اللقاح التي تم ", rightValue: Int(hvm.latestDaySnapshot.totalNumberOfVaccineDosesAdministeredInLast24Hrs ?? 0), rightText: "Total Vaccines in 24h\nاللقاحات خلال ٢٤ ساعة", backgroundColor: .green)
                         
-                        HomeViewRow(leftValue: hvm.latestDaySnapshot.totalNumberOfActiveCasesUndergoingTreatmentToDate ?? 0, leftText: "Current Active Cases\nإجمالي الحالات النشطة", rightValue: hvm.latestDaySnapshot.numberOfNewPositiveCasesInLast24Hrs ?? 0, rightValueIncreasing: hvm.isPositiveCasesIncreasing(), rightText: "Positive Cases in 24h\nالحالات الجديدة خلال ٢٤ ساعة")
+                        HomeViewRow(leftValue: hvm.latestDaySnapshot.totalNumberOfActiveCasesUndergoingTreatmentToDate ?? 0, leftValueIncreasing: hvm.isCurrentActiveCasesIncreasing(), leftText: "Current Active Cases\nإجمالي الحالات النشطة", rightValue: hvm.latestDaySnapshot.numberOfNewPositiveCasesInLast24Hrs ?? 0, rightValueIncreasing: hvm.isPositiveCasesIncreasing(), rightText: "Positive Cases in 24h\nالحالات الجديدة خلال ٢٤ ساعة")
                         
                         HomeViewRow(leftValue: hvm.latestDaySnapshot.totalNumberOfRecoveredCasesToDate ?? 0, leftText: "Total Recovered Cases\nإجمالي عدد المتعافين", rightValue: hvm.latestDaySnapshot.numberOfNewRecoveredCasesInLast24Hrs ?? 0, rightText: "Recovered Cases in 24h\nالمتعافين خلال ٢٤ ساعة")
                         
                         HomeViewRow(leftValue: hvm.latestDaySnapshot.totalNumberOfTestsToDate ?? 0, leftText: "Total Tested Cases\nإجمالي الأشخاص الذين تم فحصهم", rightValue: hvm.latestDaySnapshot.numberOfNewTestsInLast24Hrs ?? 0, rightValueIncreasing: hvm.isNumberOfTestsIncreasing(), rightText: "Test Cases in 24h\nعدد الإختبارات خلال\n٢٤ ساعة")
                         
-                        HomeViewRow(leftValue: hvm.latestDaySnapshot.totalNumberOfAcuteCasesUnderHospitalTreatment ?? 0, leftText: "Current Hospitalized\nعدد الحالات في المستشفى", rightValue: hvm.latestDaySnapshot.numberOfNewAcuteHospitalAdmissionsInLast24Hrs ?? 0, rightText: "Hospitalized in 24h\nالحالات التي تم إدخالها\nالمستشفى خلال ٢٤ ساعة")
+                        HomeViewRow(leftValue: hvm.latestDaySnapshot.totalNumberOfAcuteCasesUnderHospitalTreatment ?? 0, leftValueIncreasing: hvm.isCurrentHospitalizedCasesIncreasing(), leftText: "Current Hospitalized\nعدد الحالات في المستشفى", rightValue: hvm.latestDaySnapshot.numberOfNewAcuteHospitalAdmissionsInLast24Hrs ?? 0, rightText: "Hospitalized in 24h\nالحالات التي تم إدخالها\nالمستشفى خلال ٢٤ ساعة")
                         
-                        HomeViewRow(leftValue: hvm.latestDaySnapshot.totalNumberOfCasesUnderIcuTreatment ?? 0, leftText: "Current in ICU\nالحالات في العناية المركزة", rightValue: hvm.latestDaySnapshot.numberOfNewIcuAdmissionsInLast24Hrs ?? 0, rightText: "ICU Cases in 24h\nالحالات التي دخلت العناية\nالمركزة خلال ٢٤ ساعة")
+                        HomeViewRow(leftValue: hvm.latestDaySnapshot.totalNumberOfCasesUnderIcuTreatment ?? 0, leftValueIncreasing: hvm.isCurrentICUCasesIncreasing(), leftText: "Current in ICU\nالحالات في العناية المركزة", rightValue: hvm.latestDaySnapshot.numberOfNewIcuAdmissionsInLast24Hrs ?? 0, rightText: "ICU Admissions in 24h\nالحالات التي دخلت العناية\nالمركزة خلال ٢٤ ساعة")
                         
                         HomeViewRow(leftValue: hvm.latestDaySnapshot.totalNumberOfDeathsToDate ?? 0, leftText: "Total Death to Date\nإجمالي الوفيات", rightValue: hvm.latestDaySnapshot.numberOfNewDeathsInLast24Hrs ?? 0, rightValueIncreasing: hvm.isDeathCasesIncreasing(), rightText: "Death Cases in 24h\nالوفيات خلال ٢٤ ساعة")
                     })
@@ -70,6 +70,7 @@ struct DayView_Previews: PreviewProvider {
 
 struct HomeViewRow: View {
     var leftValue: Int
+    var leftValueIncreasing: CasesIncrease?
     var leftText: String
     var rightValue: Int
     var rightValueIncreasing: CasesIncrease?
@@ -80,9 +81,15 @@ struct HomeViewRow: View {
         HStack {
             Spacer()
             VStack {
-                Text("\(leftValue)")
-                    .foregroundColor(backgroundColor == .green ? .white : .primary)
-                    .font(.system(size: 33, weight: .bold))
+                HStack {
+                    Text("\(leftValue)")
+                        .foregroundColor(backgroundColor == .green ? .white : .primary)
+                        .font(.system(size: 33, weight: .bold))
+                    if leftValueIncreasing != nil {
+                        Image(systemName: leftValueIncreasing == .increasing ? "arrow.up.circle.fill" : leftValueIncreasing == .decreasing ? "arrow.down.circle.fill" : "equal.circle.fill")
+                            .foregroundColor(leftValueIncreasing ==  .increasing ? .red : leftValueIncreasing ==  .decreasing ? .green : .orange)
+                    }
+                }                
                 Text(leftText)
                     .foregroundColor(backgroundColor == .green ? .white : .secondary)
                     .font(.caption)
