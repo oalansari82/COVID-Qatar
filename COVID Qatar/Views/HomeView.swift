@@ -16,7 +16,7 @@ struct HomeView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                 ScrollView {
+                ScrollView(showsIndicators: false) {
                     HStack {
                         Text("Qatar's Snapshot as of \(hvm.latestDaySnapshot.date ?? "")")
                             .font(.caption)

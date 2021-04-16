@@ -13,120 +13,160 @@ struct ChartView: View {
     
     @ObservedObject var cvvm = ChartViewViewModel()
     @State private var animateChart = false
-    @State private var chartType = 0
     
     var body: some View {
-        VStack {
-            HStack {
-                VStack(alignment: .leading) {
-                    Text("Chart")
-                        .font(.system(size: 37, weight: .bold))
-                        .padding([.horizontal, .top])
-                        .padding(.top, 30)
-                    if cvvm.chartType == 0 {
-                        Text(cvvm.chartPositiveOrDeathTab == 0 ? "Positive Cases" : cvvm.chartPositiveOrDeathTab == 1 ? "Death Cases" : "Positive cases as a percentage of total tests")
+        NavigationView {
+            VStack {
+                ScrollView(showsIndicators: false) {
+                    HStack {
+                        Text(cvvm.chartTitle())
+                            .font(.subheadline)
                             .foregroundColor(.secondary)
-                            .padding(.horizontal)
+                            .padding(.leading)
+                        Spacer()
                     }
-                }
-                Spacer()
-            }
-            if cvvm.chartType == 0 {
-                ScrollView(.vertical, showsIndicators: false) {
-                    VStack {
-                        HStack {
-                            VStack {
-                                Text(String(format: "%.0f", cvvm.numberOfCases.max() ?? 0))
-                                    .font(.footnote)
-                                Spacer()
-                                Text(String(format: "%.0f", cvvm.numberOfCases.min() ?? 0))
-                                    .font(.footnote)
-                            }
-                            Divider()
-                            ZStack {
-                                LineGraph(dataPoints: cvvm.numberOfCases.reversed().normalized)
-                                    .trim(to: animateChart ? 1 : 0)
-                                    .stroke(Color.blue)
-                                    .frame(width: UIScreen.main.bounds.width - 60, height: 300)
-                                    .onAppear {
-                                        withAnimation(.easeInOut(duration: 2)) {
-                                            animateChart = true
-                                        }
-                                    }
-                                if cvvm.inProgress {
-                                    ChartLoader()
-                                }
-                            }
-                        }
                     
-                        Divider()
+                    if cvvm.chartType == "line" {
+                        LineChart(highYValue: cvvm.numberOfCases.max() ?? 0, lowYValue: cvvm.numberOfCases.min() ?? 0, graphDataPoints: cvvm.numberOfCases, animation: $animateChart, isLoading: cvvm.inProgress)
                         
                         Picker("", selection: $cvvm.chartNumberOfDaysTab) {
                             Text("30 Days").tag(0)
                             Text("90 Days").tag(1)
                             if cvvm.chartPositiveOrDeathTab != 2 {
-                                Text("All").tag(2)
+                                Text("180 Days").tag(2)
                             }
                         }.pickerStyle(SegmentedPickerStyle())
                         .padding()
                         .onChange(of: cvvm.chartNumberOfDaysTab) { (_) in
-                            cvvm.fetchData()
+                            cvvm.fetchData(for: .numberOfNewPositiveCasesInLast24Hrs)
                         }
                         
-                        Picker("", selection: $cvvm.chartPositiveOrDeathTab) {
-                            Text("Positive Cases").tag(0)
-                            Text("Death Cases").tag(1)
-                            if cvvm.chartNumberOfDaysTab != 2 {
-                                Text("Percent Positive").tag(2)
+                        GroupBox {
+                            HStack {
+                                VStack {
+                                    Text(String(format: "%.0f", cvvm.numberOfCases.min() ?? 0) + "\(cvvm.chartPositiveOrDeathTab == 2 ? "%" : "")")
+                                        .font(.title)
+                                    Text("Min")
+                                        .font(.footnote)
+                                        .foregroundColor(.secondary)
+                                }.padding(.leading)
+                                Spacer()
+                                VStack {
+                                    Text(String(format: "%.0f", cvvm.numberOfCases.max() ?? 0) + "\(cvvm.chartPositiveOrDeathTab == 2 ? "%" : "")")
+                                        .font(.title)
+                                    Text("Max")
+                                        .font(.footnote)
+                                        .foregroundColor(.secondary)
+                                }
+                                Spacer()
+                                VStack {
+                                    Text(String(format: "%.0f", cvvm.numberOfCases.first ?? 0) + "\(cvvm.chartPositiveOrDeathTab == 2 ? "%" : "")")
+                                        .font(.title)
+                                    Text("Latest")
+                                        .font(.footnote)
+                                        .foregroundColor(.secondary)
+                                }.padding(.trailing)
                             }
-                        }.pickerStyle(SegmentedPickerStyle())
-                        .padding([.horizontal])
-                        .onChange(of: cvvm.chartPositiveOrDeathTab, perform: { _ in
-                            cvvm.fetchData()
-                        })
-                        
-                        HStack {
-                            Spacer()
-                            VStack {
-                                Text(String(format: "%.0f", cvvm.numberOfCases.min() ?? 0) + "\(cvvm.chartPositiveOrDeathTab == 2 ? "%" : "")")
-                                    .font(.title)
-                                Text("Min")
-                                    .font(.footnote)
-                                    .foregroundColor(.secondary)
-                            }
-                            Spacer()
-                            VStack {
-                                Text(String(format: "%.0f", cvvm.numberOfCases.max() ?? 0) + "\(cvvm.chartPositiveOrDeathTab == 2 ? "%" : "")")
-                                    .font(.title)
-                                Text("Max")
-                                    .font(.footnote)
-                                    .foregroundColor(.secondary)
-                            }
-                            Spacer()
-                            VStack {
-                                Text(String(format: "%.0f", cvvm.numberOfCases.first ?? 0) + "\(cvvm.chartPositiveOrDeathTab == 2 ? "%" : "")")
-                                    .font(.title)
-                                Text("Latest")
-                                    .font(.footnote)
-                                    .foregroundColor(.secondary)
-                            }
-                            Spacer()
                         }.padding()
+                        
+                    } else {
+                        BarChart()
                     }
                 }
-            } else {
-                ScrollView {
-                    BarChart().padding(.bottom, 40)
-                }
+                
+                Picker("", selection: $cvvm.chartType) {
+                    Text("Line Chart").tag("line")
+                    Text("Bar Chart").tag("bar")
+                }.pickerStyle(SegmentedPickerStyle())
+                .padding(.horizontal)
+                .padding(.vertical, 10)
             }
-            
-            
-            Picker("", selection: $cvvm.chartType) {
-                Text("Line Chart").tag(0)
-                Text("Bar Chart").tag(1)
-            }.pickerStyle(SegmentedPickerStyle())
-            .padding([.horizontal])
-            Spacer()
+            .toolbar(content: {
+                if cvvm.chartType == "line" {
+                    Menu {
+                        Button(action: {
+                            cvvm.lineChartType = ChartType.numberOfNewPositiveCasesInLast24Hrs
+                            cvvm.fetchData(for: cvvm.lineChartType)
+                        }) {
+                            Text("Positive Cases")
+                                .font(.caption)
+                                .bold()
+                                .padding(10)
+                                .background(cvvm.lineChartType == .numberOfNewPositiveCasesInLast24Hrs ? Color.secondary : .blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(5)
+                        }.disabled(cvvm.lineChartType == .numberOfNewPositiveCasesInLast24Hrs)
+                        
+                        Button(action: {
+                            cvvm.lineChartType = ChartType.numberOfNewDeathsInLast24Hrs
+                            cvvm.fetchData(for: cvvm.lineChartType)
+                        }) {
+                            Text("Death Cases")
+                                .font(.caption)
+                                .bold()
+                                .padding(10)
+                                .background(cvvm.lineChartType == .numberOfNewDeathsInLast24Hrs ? Color.secondary : .blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(5)
+                        }.disabled(cvvm.lineChartType == .numberOfNewDeathsInLast24Hrs)
+                        
+                        Button(action: {
+                            cvvm.lineChartType = ChartType.totalNumberOfCasesUnderIcuTreatment
+                            cvvm.fetchData(for: cvvm.lineChartType)
+                        }) {
+                            Text("Current ICU Cases")
+                                .font(.caption)
+                                .bold()
+                                .padding(10)
+                                .background(cvvm.lineChartType == .totalNumberOfCasesUnderIcuTreatment ? Color.secondary : .blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(5)
+                        }.disabled(cvvm.lineChartType == .totalNumberOfCasesUnderIcuTreatment)
+                        
+                        Button(action: {
+                            cvvm.lineChartType = ChartType.totalNumberOfActiveCasesUndergoingTreatmentToDate
+                            cvvm.fetchData(for: cvvm.lineChartType)
+                        }) {
+                            Text("Current Active")
+                                .font(.caption)
+                                .bold()
+                                .padding(10)
+                                .background(cvvm.lineChartType == .totalNumberOfActiveCasesUndergoingTreatmentToDate ? Color.secondary : .blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(5)
+                        }.disabled(cvvm.lineChartType == .totalNumberOfActiveCasesUndergoingTreatmentToDate)
+                        
+                        Button(action: {
+                            cvvm.lineChartType = ChartType.totalNumberOfAcuteCasesUnderHospitalTreatment
+                            cvvm.fetchData(for: cvvm.lineChartType)
+                        }) {
+                            Text("Current Hospitalized")
+                                .font(.caption)
+                                .bold()
+                                .padding(10)
+                                .background(cvvm.lineChartType == .totalNumberOfAcuteCasesUnderHospitalTreatment ? Color.secondary : .blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(5)
+                        }.disabled(cvvm.lineChartType == .totalNumberOfAcuteCasesUnderHospitalTreatment)
+                        
+                        Button(action: {
+                            cvvm.lineChartType = ChartType.numberOfNewRecoveredCasesInLast24Hrs
+                            cvvm.fetchData(for: cvvm.lineChartType)
+                        }) {
+                            Text("Recoveries")
+                                .font(.caption)
+                                .bold()
+                                .padding(10)
+                                .background(cvvm.lineChartType == .numberOfNewRecoveredCasesInLast24Hrs ? Color.secondary : .blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(5)
+                        }.disabled(cvvm.lineChartType == .numberOfNewRecoveredCasesInLast24Hrs)
+                    } label: {
+                        Image(systemName: "slider.horizontal.3")
+                    }
+                }
+            })
+                .navigationTitle("Charts")
         }
     }
 }
@@ -137,3 +177,40 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
+struct LineChart: View {
+    var highYValue: CGFloat
+    var lowYValue: CGFloat
+    var graphDataPoints: [CGFloat]
+    @Binding var animation: Bool
+    var isLoading: Bool
+    
+    var body: some View {
+        VStack {
+            HStack {
+                VStack {
+                    Text(String(format: "%.0f", highYValue))
+                        .font(.footnote)
+                    Spacer()
+                    Text(String(format: "%.0f", lowYValue))
+                        .font(.footnote)
+                }
+                Divider()
+                ZStack {
+                    LineGraph(dataPoints: graphDataPoints.reversed().normalized)
+                        .trim(to: animation ? 1 : 0)
+                        .stroke(Color.blue)
+                        .frame(width: UIScreen.main.bounds.width - 60, height: 250)
+                        .onAppear {
+                            withAnimation(.easeInOut(duration: 2)) {
+                                animation = true
+                            }
+                        }
+                    if isLoading {
+                        ProgressView()
+                    }
+                }
+            }
+            Divider()
+        }
+    }
+}

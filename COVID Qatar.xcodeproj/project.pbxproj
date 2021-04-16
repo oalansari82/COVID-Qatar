@@ -3,12 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		8536A155260DAAFF00BB18CA /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536A154260DAAFF00BB18CA /* HomeView.swift */; };
-		8536A159260DAEBB00BB18CA /* SwiftUICharts in Frameworks */ = {isa = PBXBuildFile; productRef = 8536A158260DAEBB00BB18CA /* SwiftUICharts */; };
 		8536A15F26102A2200BB18CA /* CovidData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536A15E26102A2200BB18CA /* CovidData.swift */; };
 		8536A1682610326C00BB18CA /* ChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536A1672610326C00BB18CA /* ChartViewModel.swift */; };
 		8536A1702611920F00BB18CA /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536A16F2611920F00BB18CA /* HomeViewModel.swift */; };
@@ -56,7 +55,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8536A159260DAEBB00BB18CA /* SwiftUICharts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,6 +72,7 @@
 		8536A166261031D700BB18CA /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				85970F992616CFD400B09FD5 /* CovidTabView.swift */,
 				8536A1672610326C00BB18CA /* ChartViewModel.swift */,
 				8536A16F2611920F00BB18CA /* HomeViewModel.swift */,
 				85970FA7261AF15700B09FD5 /* ListViewModel.swift */,
@@ -108,7 +107,6 @@
 				8584C62A26204E3A004DF9D1 /* BarChart.swift */,
 				85970F922616CA2900B09FD5 /* ListView.swift */,
 				85970F882615A93900B09FD5 /* GridView.swift */,
-				85970F992616CFD400B09FD5 /* CovidTabView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -170,7 +168,6 @@
 			);
 			name = "COVID Qatar";
 			packageProductDependencies = (
-				8536A158260DAEBB00BB18CA /* SwiftUICharts */,
 			);
 			productName = "COVID Qatar";
 			productReference = 85C852622605AEAE00E68B4E /* COVID Qatar.app */;
@@ -200,7 +197,6 @@
 			);
 			mainGroup = 85C852592605AEAE00E68B4E;
 			packageReferences = (
-				8536A157260DAEBB00BB18CA /* XCRemoteSwiftPackageReference "ChartView" */,
 			);
 			productRefGroup = 85C852632605AEAE00E68B4E /* Products */;
 			projectDirPath = "";
@@ -432,25 +428,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		8536A157260DAEBB00BB18CA /* XCRemoteSwiftPackageReference "ChartView" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/AppPear/ChartView.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.5.4;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		8536A158260DAEBB00BB18CA /* SwiftUICharts */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 8536A157260DAEBB00BB18CA /* XCRemoteSwiftPackageReference "ChartView" */;
-			productName = SwiftUICharts;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 85C8525A2605AEAE00E68B4E /* Project object */;
 }
