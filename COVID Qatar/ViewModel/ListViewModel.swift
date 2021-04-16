@@ -12,6 +12,7 @@ class ListViewModel: ObservableObject {
     private let servicesAPI = ServicesAPI()
     @Published var data = [CovidData.Records.Fields]()
     @Published var inProgress = false
+    @Published var numberOfDays = 30
     
     init() {
         fetchData()
@@ -21,7 +22,7 @@ class ListViewModel: ObservableObject {
         self.inProgress = true
         self.data.removeAll()
         
-        servicesAPI.fetchData(numberOfDays: -1) { results in
+        servicesAPI.fetchData(numberOfDays: numberOfDays) { results in
             switch results {
             case .success(let data):
                 data.records.forEach { record in

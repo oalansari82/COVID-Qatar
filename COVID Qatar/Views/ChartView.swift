@@ -12,7 +12,6 @@ import Combine
 struct ChartView: View {
     
     @ObservedObject var cvvm = ChartViewViewModel()
-    @State private var animateChart = false
     
     var body: some View {
         NavigationView {
@@ -27,7 +26,7 @@ struct ChartView: View {
                     }
                     
                     if cvvm.chartType == "line" {
-                        LineChart(highYValue: cvvm.numberOfCases.max() ?? 0, lowYValue: cvvm.numberOfCases.min() ?? 0, graphDataPoints: cvvm.numberOfCases, animation: $animateChart, isLoading: cvvm.inProgress)
+                        LineChart(highYValue: cvvm.numberOfCases.max() ?? 0, lowYValue: cvvm.numberOfCases.min() ?? 0, graphDataPoints: cvvm.numberOfCases, isLoading: cvvm.inProgress)
                         
                         Picker("", selection: $cvvm.chartNumberOfDaysTab) {
                             Text("30 Days").tag(0)
@@ -181,7 +180,6 @@ struct LineChart: View {
     var highYValue: CGFloat
     var lowYValue: CGFloat
     var graphDataPoints: [CGFloat]
-    @Binding var animation: Bool
     var isLoading: Bool
     
     var body: some View {
@@ -197,14 +195,9 @@ struct LineChart: View {
                 Divider()
                 ZStack {
                     LineGraph(dataPoints: graphDataPoints.reversed().normalized)
-                        .trim(to: animation ? 1 : 0)
                         .stroke(Color.blue)
                         .frame(width: UIScreen.main.bounds.width - 60, height: 250)
-                        .onAppear {
-                            withAnimation(.easeInOut(duration: 2)) {
-                                animation = true
-                            }
-                        }
+
                     if isLoading {
                         ProgressView()
                     }

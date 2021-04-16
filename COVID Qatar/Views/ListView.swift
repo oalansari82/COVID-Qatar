@@ -32,15 +32,39 @@ struct ListView: View {
                     }
                 }
                 .navigationBarTitle("Historical Data")
-                .navigationBarItems(trailing:
-                                        Button(action:{
-                                            lvm.fetchData()
-                                        }) {
-                                            Image(systemName: "arrow.triangle.2.circlepath")
-                                                .rotationEffect(Angle.degrees(self.lvm.inProgress ? 360 : 0))
-                                                .animation(.easeInOut)
-                                        }
-                )
+                .toolbar(content: {
+                    Menu {
+                        Button(action: {
+                            lvm.numberOfDays = 30
+                            lvm.fetchData()
+                        }) {
+                            Text("30 Days")
+                        }
+                        
+                        Button(action: {
+                            lvm.numberOfDays = 90
+                            lvm.fetchData()
+                        }) {
+                            Text("90 Days")
+                        }
+                        
+                        Button(action: {
+                            lvm.numberOfDays = 180
+                            lvm.fetchData()
+                        }) {
+                            Text("180 Days")
+                        }
+                        
+                        Button(action: {
+                            lvm.numberOfDays = -1
+                            lvm.fetchData()
+                        }) {
+                            Text("All")
+                        }
+                    } label: {
+                        Image(systemName: "slider.horizontal.3")
+                    }
+                })
             }
         }
     }
