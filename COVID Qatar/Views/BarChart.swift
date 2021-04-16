@@ -18,11 +18,11 @@ struct BarChart: View {
             ZStack {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(alignment: .bottom) {
-                        ForEach(lvm.data.prefix(90), id: \.self) { record in
+                        ForEach(lvm.data, id: \.self) { record in
                             VStack {
                                 Rectangle()
                                         .frame(width: 20, height: animateChart ? (CGFloat(record.numberOfNewTestsInLast24Hrs ?? 0) / self.lvm.getMaxTests()) * 300 : 0)
-                                        .foregroundColor(Color(.systemGray3))
+                                    .foregroundColor(Color.black.opacity(0.08))
                                         .overlay(
                                             VStack(spacing: 0) {
                                                 Rectangle().fill(Color.blue)
@@ -98,6 +98,32 @@ struct BarChart: View {
             .padding(.leading)
             
         }
+        .toolbar(content: {
+            Menu {
+                Button(action: {
+                    lvm.numberOfDays = 30
+                    lvm.fetchData()
+                }) {
+                    Text("30 Days")
+                }
+                
+                Button(action: {
+                    lvm.numberOfDays = 90
+                    lvm.fetchData()
+                }) {
+                    Text("90 Days")
+                }
+                
+                Button(action: {
+                    lvm.numberOfDays = 180
+                    lvm.fetchData()
+                }) {
+                    Text("180 Days")
+                }
+            } label: {
+                Image(systemName: "slider.horizontal.3")
+            }
+        })
     }
 }
 

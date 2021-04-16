@@ -195,7 +195,7 @@ struct LineChart: View {
                 Divider()
                 ZStack {
                     LineGraph(dataPoints: graphDataPoints.reversed().normalized)
-                        .stroke(Color.blue)
+                        .stroke(LinearGradient(gradient: Gradient(colors: [.red, .blue]), startPoint: .top, endPoint: .bottom))
                         .frame(width: UIScreen.main.bounds.width - 60, height: 250)
 
                     if isLoading {
