@@ -22,7 +22,7 @@ struct BarChart: View {
                             VStack {
                                 Rectangle()
                                         .frame(width: 20, height: animateChart ? (CGFloat(record.numberOfNewTestsInLast24Hrs ?? 0) / self.lvm.getMaxTests()) * 300 : 0)
-                                    .foregroundColor(Color.black.opacity(0.08))
+                                    .foregroundColor(Color.chartBars)
                                         .overlay(
                                             VStack(spacing: 0) {
                                                 Rectangle().fill(Color.blue)
@@ -76,7 +76,7 @@ struct BarChart: View {
                 HStack {
                     Circle()
                         .frame(width: 10)
-                        .foregroundColor(Color(.systemGray3))
+                        .foregroundColor(Color.chartBars)
                     Text("Number of tests in the last 24 hours")
                         .font(.caption2)
                 }
@@ -122,6 +122,7 @@ struct BarChart: View {
                 }
             } label: {
                 Image(systemName: "slider.horizontal.3")
+                    .foregroundColor(.blue)
             }
         })
     }
@@ -129,6 +130,9 @@ struct BarChart: View {
 
 struct BarChart_Previews: PreviewProvider {
     static var previews: some View {
-        BarChart()
+        Group {
+            BarChart()
+            BarChart().preferredColorScheme(.dark)
+        }
     }
 }

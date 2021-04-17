@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftUICharts
 import Combine
 
 struct ChartView: View {
@@ -23,28 +22,29 @@ struct ChartView: View {
                             .foregroundColor(.secondary)
                             .padding(.leading)
                         Spacer()
-                    }
+                    }.redacted(reason: cvvm.inProgress ? .placeholder : [])
                     
                     if cvvm.chartType == "line" {
                         LineChart(highYValue: cvvm.numberOfCases.max() ?? 0, lowYValue: cvvm.numberOfCases.min() ?? 0, graphDataPoints: cvvm.numberOfCases, isLoading: cvvm.inProgress)
+                            .redacted(reason: cvvm.inProgress ? .placeholder : [])
                         
                         Picker("", selection: $cvvm.chartNumberOfDaysTab) {
                             Text("30 Days").tag(0)
                             Text("90 Days").tag(1)
-                            if cvvm.chartPositiveOrDeathTab != 2 {
-                                Text("180 Days").tag(2)
-                            }
+                            Text("180 Days").tag(2)
+                            Text("All").tag(3)
                         }.pickerStyle(SegmentedPickerStyle())
                         .padding()
                         .onChange(of: cvvm.chartNumberOfDaysTab) { (_) in
                             cvvm.fetchData(for: .numberOfNewPositiveCasesInLast24Hrs)
                         }
-                        
-                        GroupBox {
+                                                
+                        GroupBox(label: Text(cvvm.groupBoxTitle()).font(.caption).padding(.bottom, 5)) {
                             HStack {
                                 VStack {
                                     Text(String(format: "%.0f", cvvm.numberOfCases.min() ?? 0) + "\(cvvm.chartPositiveOrDeathTab == 2 ? "%" : "")")
                                         .font(.title)
+                                        .redacted(reason: cvvm.inProgress ? .placeholder : [])
                                     Text("Min")
                                         .font(.footnote)
                                         .foregroundColor(.secondary)
@@ -53,6 +53,7 @@ struct ChartView: View {
                                 VStack {
                                     Text(String(format: "%.0f", cvvm.numberOfCases.max() ?? 0) + "\(cvvm.chartPositiveOrDeathTab == 2 ? "%" : "")")
                                         .font(.title)
+                                        .redacted(reason: cvvm.inProgress ? .placeholder : [])
                                     Text("Max")
                                         .font(.footnote)
                                         .foregroundColor(.secondary)
@@ -61,6 +62,7 @@ struct ChartView: View {
                                 VStack {
                                     Text(String(format: "%.0f", cvvm.numberOfCases.first ?? 0) + "\(cvvm.chartPositiveOrDeathTab == 2 ? "%" : "")")
                                         .font(.title)
+                                        .redacted(reason: cvvm.inProgress ? .placeholder : [])
                                     Text("Latest")
                                         .font(.footnote)
                                         .foregroundColor(.secondary)
@@ -77,8 +79,7 @@ struct ChartView: View {
                     Text("Line Chart").tag("line")
                     Text("Bar Chart").tag("bar")
                 }.pickerStyle(SegmentedPickerStyle())
-                .padding(.horizontal)
-                .padding(.vertical, 10)
+                .padding()
             }
             .toolbar(content: {
                 if cvvm.chartType == "line" {
@@ -162,6 +163,7 @@ struct ChartView: View {
                         }.disabled(cvvm.lineChartType == .numberOfNewRecoveredCasesInLast24Hrs)
                     } label: {
                         Image(systemName: "slider.horizontal.3")
+                            .foregroundColor(.blue)
                     }
                 }
             })

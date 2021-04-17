@@ -28,7 +28,7 @@ struct CovidTabView: View {
                     Text("History")
                 }
             
-        }
+        }.accentColor(.maroon)
     }
 }
 

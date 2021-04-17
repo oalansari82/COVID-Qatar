@@ -16,54 +16,15 @@ class ChartViewViewModel: ObservableObject {
     @Published var chartPositiveOrDeathTab = 0
     @Published var chartType = "line"
     @Published var lineChartType: ChartType = .numberOfNewPositiveCasesInLast24Hrs
-//    @Published var chartTitle: String = ""
     
     init() {
         fetchData(for: lineChartType)
     }
     
-    func chartTitle() -> String {
-        if chartType == "line" {
-            switch lineChartType {
-            case .numberOfNewPositiveCasesInLast24Hrs:
-                return "Positive cases in the last 24 hours"
-            case .totalNumberOfDeathsToDate:
-                return "Total number of deaths to date"
-            case .totalNumberOfActiveCasesUndergoingTreatmentToDate:
-                return "Total number of active cases undergoing treatment"
-            case .numberOfNewAcuteHospitalAdmissionsInLast24Hrs:
-                return "Number of new acute hospital addmissions in the last 24 hours"
-            case .numberOfNewTestsInLast24Hrs:
-                return "Number of new tests in the last 24 hours"
-            case .totalNumberOfVaccineDosesAdministeredInLast24Hrs:
-                return "Total number of vaccine doses administered in the last 24 hours"
-            case .totalNumberOfAcuteCasesUnderHospitalTreatment:
-                return "Total number of acute cases under Hospital treatment"
-            case .totalNumberOfCasesUnderIcuTreatment:
-                return "Total number of cases under ICU treatment"
-            case .numberOfNewIcuAdmissionsInLast24Hrs:
-                return "Number of new ICU admissions in the last 24 hours"
-            case .totalNumberOfVaccineDosesAdministeredSinceStart:
-                return "Total number of vaccine doses administered to date"
-            case .numberOfNewDeathsInLast24Hrs:
-                return "Number of new deaths in the last 24 hours"
-            case .totalNumberOfTestsToDate:
-                return "Total number of test to date"
-            case .numberOfNewRecoveredCasesInLast24Hrs:
-                return "Number of new recovered cases in the last 24 hours"
-            case .totalNumberOfRecoveredCasesToDate:
-                return "Number of recovered cases to date"
-            case .totalNumberOfPositiveCasesToDate:
-                return "Total number of positive cases to date"
-            }
-        }
-        return ""
-    }
-    
     func fetchData(for chartType: ChartType) {
         inProgress = true
         numberOfCases.removeAll()
-        serviceAPI.fetchData(numberOfDays: chartNumberOfDaysTab == 0 ? 30 : chartNumberOfDaysTab == 1 ? 90 : 180) { results in
+        serviceAPI.fetchData(numberOfDays: chartNumberOfDaysTab == 0 ? 30 : chartNumberOfDaysTab == 1 ? 90 : chartNumberOfDaysTab == 2 ? 180 : -1) { results in
             switch results {
             case .success(let data):
                 data.records.forEach { record in
@@ -110,6 +71,67 @@ class ChartViewViewModel: ObservableObject {
                 print(err.localizedDescription)
             }
         }
+    }
+    
+    
+    func groupBoxTitle() -> String {
+        if chartType == "line" {
+            switch lineChartType {
+            case .numberOfNewPositiveCasesInLast24Hrs:
+                return "Positive cases in the last 24 hours"
+            case .totalNumberOfDeathsToDate:
+                return "Total number of deaths to date"
+            case .totalNumberOfActiveCasesUndergoingTreatmentToDate:
+                return "Total number of active cases undergoing treatment"
+            case .numberOfNewAcuteHospitalAdmissionsInLast24Hrs:
+                return "Number of new acute hospital addmissions in the last 24 hours"
+            case .numberOfNewTestsInLast24Hrs:
+                return "Number of new tests in the last 24 hours"
+            case .totalNumberOfVaccineDosesAdministeredInLast24Hrs:
+                return "Total number of vaccine doses administered in the last 24 hours"
+            case .totalNumberOfAcuteCasesUnderHospitalTreatment:
+                return "Total number of acute cases under Hospital treatment"
+            case .totalNumberOfCasesUnderIcuTreatment:
+                return "Total number of cases under ICU treatment"
+            case .numberOfNewIcuAdmissionsInLast24Hrs:
+                return "Number of new ICU admissions in the last 24 hours"
+            case .totalNumberOfVaccineDosesAdministeredSinceStart:
+                return "Total number of vaccine doses administered to date"
+            case .numberOfNewDeathsInLast24Hrs:
+                return "Number of new deaths in the last 24 hours"
+            case .totalNumberOfTestsToDate:
+                return "Total number of test to date"
+            case .numberOfNewRecoveredCasesInLast24Hrs:
+                return "Number of new recovered cases in the last 24 hours"
+            case .totalNumberOfRecoveredCasesToDate:
+                return "Number of recovered cases to date"
+            case .totalNumberOfPositiveCasesToDate:
+                return "Total number of positive cases to date"
+            }
+        }
+        return ""
+    }
+    
+    func chartTitle() -> String {
+        if chartType == "line" {
+            switch lineChartType {
+            case .numberOfNewPositiveCasesInLast24Hrs:
+                return "Positive Cases"
+            case .totalNumberOfAcuteCasesUnderHospitalTreatment:
+                return "Current Hospitalized"
+            case .totalNumberOfActiveCasesUndergoingTreatmentToDate:
+                return "Current Active"
+            case .totalNumberOfCasesUnderIcuTreatment:
+                return "Current ICU Cases"
+            case .numberOfNewDeathsInLast24Hrs:
+                return "Deaths in the last 24 hours"
+            case .numberOfNewRecoveredCasesInLast24Hrs:
+                return "Recoveries in the last 24 hours"
+            default:
+                return ""
+            }
+        }
+        return ""
     }
 }
 

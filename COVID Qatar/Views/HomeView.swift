@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftUICharts
 
 struct HomeView: View {
     
@@ -27,7 +26,7 @@ struct HomeView: View {
 
                     LazyVGrid(columns: [GridItem(.flexible())], alignment: .center, content: {
                         
-                        HomeViewRow(leftValue: Int( hvm.latestDaySnapshot.totalNumberOfVaccineDosesAdministeredSinceStart ?? "") ?? 0, leftText: "Total Vaccines Given\nإجمالي عدد اللقاح التي تم ", rightValue: Int(hvm.latestDaySnapshot.totalNumberOfVaccineDosesAdministeredInLast24Hrs ?? 0), rightText: "Total Vaccines in 24h\nاللقاحات خلال ٢٤ ساعة", backgroundColor: .green)
+                        HomeViewRow(leftValue: Int( hvm.latestDaySnapshot.totalNumberOfVaccineDosesAdministeredSinceStart ?? "") ?? 0, leftText: "Total Vaccines Given\nإجمالي عدد اللقاحات التي تم إعطائها", rightValue: Int(hvm.latestDaySnapshot.totalNumberOfVaccineDosesAdministeredInLast24Hrs ?? 0), rightText: "Total Vaccines in 24h\nاللقاحات خلال ٢٤ ساعة", backgroundColor: .maroon)
                         
                         HomeViewRow(leftValue: hvm.latestDaySnapshot.totalNumberOfActiveCasesUndergoingTreatmentToDate ?? 0, leftValueIncreasing: hvm.isCurrentActiveCasesIncreasing(), leftText: "Current Active Cases\nإجمالي الحالات النشطة", rightValue: hvm.latestDaySnapshot.numberOfNewPositiveCasesInLast24Hrs ?? 0, rightValueIncreasing: hvm.isPositiveCasesIncreasing(), rightText: "Positive Cases in 24h\nالحالات الجديدة خلال ٢٤ ساعة")
                         
@@ -56,6 +55,7 @@ struct HomeView: View {
                                         Image(systemName: "arrow.triangle.2.circlepath")
                                             .rotationEffect(Angle.degrees(self.hvm.inProgress ? 360 : 0))
                                             .animation(.easeInOut)
+                                            .foregroundColor(.blue)
                                     }
         )
         }
@@ -83,7 +83,7 @@ struct HomeViewRow: View {
             VStack {
                 HStack {
                     Text("\(leftValue)")
-                        .foregroundColor(backgroundColor == .green ? .white : .primary)
+                        .foregroundColor(backgroundColor != nil ? .white : .primary)
                         .font(.system(size: 33, weight: .bold))
                     if leftValueIncreasing != nil {
                         Image(systemName: leftValueIncreasing == .increasing ? "arrow.up.circle.fill" : leftValueIncreasing == .decreasing ? "arrow.down.circle.fill" : "equal.circle.fill")
@@ -91,7 +91,7 @@ struct HomeViewRow: View {
                     }
                 }                
                 Text(leftText)
-                    .foregroundColor(backgroundColor == .green ? .white : .secondary)
+                    .foregroundColor(backgroundColor != nil ? .white : .secondary)
                     .font(.caption)
                     .foregroundColor(Color.secondary)
             }.frame(width: (UIScreen.main.bounds.width / 2) - 10, alignment: .center)
@@ -99,7 +99,7 @@ struct HomeViewRow: View {
             VStack {
                 HStack {
                     Text("\(rightValue)")
-                        .foregroundColor(backgroundColor == .green ? .white : .primary)
+                        .foregroundColor(backgroundColor != nil ? .white : .primary)
                         .font(.system(size: 33, weight: .bold))
                     if rightValueIncreasing != nil {
                         Image(systemName: rightValueIncreasing == .increasing ? "arrow.up.circle.fill" : rightValueIncreasing == .decreasing ? "arrow.down.circle.fill" : "equal.circle.fill")
@@ -107,7 +107,7 @@ struct HomeViewRow: View {
                     }
                 }
                 Text(rightText)
-                    .foregroundColor(backgroundColor == .green ? .white : .secondary)
+                    .foregroundColor(backgroundColor != nil ? .white : .secondary)
                     .font(.caption)
                     .foregroundColor(Color.secondary)
             }.frame(width: (UIScreen.main.bounds.width / 2) - 10, alignment: .center)

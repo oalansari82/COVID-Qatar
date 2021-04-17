@@ -25,6 +25,7 @@
 		85C852682605AEAE00E68B4E /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C852672605AEAE00E68B4E /* ChartView.swift */; };
 		85C8526A2605AEAE00E68B4E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 85C852692605AEAE00E68B4E /* Assets.xcassets */; };
 		85C8526D2605AEAE00E68B4E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 85C8526C2605AEAE00E68B4E /* Preview Assets.xcassets */; };
+		85DECDE02629A60200AB0C2E /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DECDDF2629A60200AB0C2E /* Color+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 		85C852692605AEAE00E68B4E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		85C8526C2605AEAE00E68B4E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		85C8526E2605AEAE00E68B4E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		85DECDDF2629A60200AB0C2E /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,7 +74,6 @@
 		8536A166261031D700BB18CA /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				85970F992616CFD400B09FD5 /* CovidTabView.swift */,
 				8536A1672610326C00BB18CA /* ChartViewModel.swift */,
 				8536A16F2611920F00BB18CA /* HomeViewModel.swift */,
 				85970FA7261AF15700B09FD5 /* ListViewModel.swift */,
@@ -87,6 +88,7 @@
 				85970F8126142EE200B09FD5 /* AlertType.swift */,
 				85970F9C2618306700B09FD5 /* Array+Extension.swift */,
 				8584C623261D712B004DF9D1 /* ChartLoader.swift */,
+				85DECDDF2629A60200AB0C2E /* Color+Extension.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -107,6 +109,7 @@
 				8584C62A26204E3A004DF9D1 /* BarChart.swift */,
 				85970F922616CA2900B09FD5 /* ListView.swift */,
 				85970F882615A93900B09FD5 /* GridView.swift */,
+				85970F992616CFD400B09FD5 /* CovidTabView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -238,6 +241,7 @@
 				8536A15F26102A2200BB18CA /* CovidData.swift in Sources */,
 				8536A155260DAAFF00BB18CA /* HomeView.swift in Sources */,
 				85C852662605AEAE00E68B4E /* COVID_QatarApp.swift in Sources */,
+				85DECDE02629A60200AB0C2E /* Color+Extension.swift in Sources */,
 				85970F8226142EE200B09FD5 /* AlertType.swift in Sources */,
 				85970F932616CA2900B09FD5 /* ListView.swift in Sources */,
 			);
@@ -377,6 +381,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "io.alansari.COVID-Qatar";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -399,6 +404,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "io.alansari.COVID-Qatar";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
