@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -11,6 +11,7 @@
 		8536A15F26102A2200BB18CA /* CovidData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536A15E26102A2200BB18CA /* CovidData.swift */; };
 		8536A1682610326C00BB18CA /* ChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536A1672610326C00BB18CA /* ChartViewModel.swift */; };
 		8536A1702611920F00BB18CA /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536A16F2611920F00BB18CA /* HomeViewModel.swift */; };
+		857BE126262C0B1400E92B57 /* SwiftUICharts in Frameworks */ = {isa = PBXBuildFile; productRef = 857BE125262C0B1400E92B57 /* SwiftUICharts */; };
 		8584C624261D712B004DF9D1 /* ChartLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8584C623261D712B004DF9D1 /* ChartLoader.swift */; };
 		8584C62B26204E3A004DF9D1 /* BarChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8584C62A26204E3A004DF9D1 /* BarChart.swift */; };
 		85970F8226142EE200B09FD5 /* AlertType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85970F8126142EE200B09FD5 /* AlertType.swift */; };
@@ -57,6 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				857BE126262C0B1400E92B57 /* SwiftUICharts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -171,6 +173,7 @@
 			);
 			name = "COVID Qatar";
 			packageProductDependencies = (
+				857BE125262C0B1400E92B57 /* SwiftUICharts */,
 			);
 			productName = "COVID Qatar";
 			productReference = 85C852622605AEAE00E68B4E /* COVID Qatar.app */;
@@ -200,6 +203,7 @@
 			);
 			mainGroup = 85C852592605AEAE00E68B4E;
 			packageReferences = (
+				857BE124262C0B1400E92B57 /* XCRemoteSwiftPackageReference "SwiftUICharts" */,
 			);
 			productRefGroup = 85C852632605AEAE00E68B4E /* Products */;
 			projectDirPath = "";
@@ -381,7 +385,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1;
+				MARKETING_VERSION = 0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "io.alansari.COVID-Qatar";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -404,7 +408,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1;
+				MARKETING_VERSION = 0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "io.alansari.COVID-Qatar";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -434,6 +438,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		857BE124262C0B1400E92B57 /* XCRemoteSwiftPackageReference "SwiftUICharts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/willdale/SwiftUICharts.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.3.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		857BE125262C0B1400E92B57 /* SwiftUICharts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 857BE124262C0B1400E92B57 /* XCRemoteSwiftPackageReference "SwiftUICharts" */;
+			productName = SwiftUICharts;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 85C8525A2605AEAE00E68B4E /* Project object */;
 }

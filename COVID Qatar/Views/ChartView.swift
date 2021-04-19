@@ -6,39 +6,37 @@
 //
 
 import SwiftUI
-import Combine
+import SwiftUICharts
 
 struct ChartView: View {
     
     @ObservedObject var cvvm = ChartViewViewModel()
+    @State var chartData = LineChartData(dataSets: LineDataSet(dataPoints: []))
     
     var body: some View {
         NavigationView {
             VStack {
                 ScrollView(showsIndicators: false) {
-                    HStack {
-                        Text(cvvm.chartTitle())
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                            .padding(.leading)
-                        Spacer()
-                    }.redacted(reason: cvvm.inProgress ? .placeholder : [])
-                    
-                    if cvvm.chartType == "line" {
-                        LineChart(highYValue: cvvm.numberOfCases.max() ?? 0, lowYValue: cvvm.numberOfCases.min() ?? 0, graphDataPoints: cvvm.numberOfCases, isLoading: cvvm.inProgress)
-                            .redacted(reason: cvvm.inProgress ? .placeholder : [])
-                        
-                        Picker("", selection: $cvvm.chartNumberOfDaysTab) {
-                            Text("30 Days").tag(0)
-                            Text("90 Days").tag(1)
-                            Text("180 Days").tag(2)
-                            Text("All").tag(3)
-                        }.pickerStyle(SegmentedPickerStyle())
-                        .padding()
-                        .onChange(of: cvvm.chartNumberOfDaysTab) { (_) in
-                            cvvm.fetchData(for: .numberOfNewPositiveCasesInLast24Hrs)
+                        ZStack {
+                            FilledLineChart(chartData: chartData)
+                                .touchOverlay(chartData: chartData, specifier: "%.0f")
+                                .averageLine(chartData: chartData,strokeStyle: StrokeStyle(lineWidth: 1, dash: [5,10]))
+                                .yAxisGrid(chartData: chartData)
+                                .yAxisLabels(chartData: chartData)
+                                .infoBox(chartData: chartData)
+                                .floatingInfoBox(chartData: chartData)
+                                .headerBox(chartData: chartData)
+                                .legends(chartData: chartData, columns: [GridItem(.flexible()), GridItem(.flexible())])
+                                .frame(minWidth: 150, maxWidth: 900, minHeight: 300, idealHeight: 350, maxHeight: 400, alignment: .center)
+                                .padding()
+                                .onAppear {
+                                    updateUI()    
+                                }
+                            if cvvm.inProgress {
+                                ProgressView()
+                            }
                         }
-                                                
+                                             
                         GroupBox(label: Text(cvvm.groupBoxTitle()).font(.caption).padding(.bottom, 5)) {
                             HStack {
                                 VStack {
@@ -68,107 +66,75 @@ struct ChartView: View {
                                         .foregroundColor(.secondary)
                                 }.padding(.trailing)
                             }
-                        }.padding()
-                        
-                    } else {
-                        BarChart()
-                    }
+                        }.padding(.horizontal)
                 }
-                
-                Picker("", selection: $cvvm.chartType) {
-                    Text("Line Chart").tag("line")
-                    Text("Bar Chart").tag("bar")
+                Picker("", selection: $cvvm.chartNumberOfDaysTab) {
+                    Text("30 Days").tag(30)
+                    Text("90 Days").tag(90)
+                    Text("180 Days").tag(180)
+                    Text("All").tag(-1)
                 }.pickerStyle(SegmentedPickerStyle())
                 .padding()
+                .onChange(of: cvvm.chartNumberOfDaysTab) { (_) in
+                    updateUI()
+                }
+//                Picker("", selection: $cvvm.chartType) {
+//                    Text("Line Chart").tag("line")
+//                    Text("Bar Chart").tag("bar")
+//                }.pickerStyle(SegmentedPickerStyle())
+//                .padding()
             }
+            
             .toolbar(content: {
-                if cvvm.chartType == "line" {
                     Menu {
                         Button(action: {
                             cvvm.lineChartType = ChartType.numberOfNewPositiveCasesInLast24Hrs
-                            cvvm.fetchData(for: cvvm.lineChartType)
+                            updateUI()
                         }) {
                             Text("Positive Cases")
-                                .font(.caption)
-                                .bold()
-                                .padding(10)
-                                .background(cvvm.lineChartType == .numberOfNewPositiveCasesInLast24Hrs ? Color.secondary : .blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(5)
-                        }.disabled(cvvm.lineChartType == .numberOfNewPositiveCasesInLast24Hrs)
+                        }
                         
                         Button(action: {
                             cvvm.lineChartType = ChartType.numberOfNewDeathsInLast24Hrs
-                            cvvm.fetchData(for: cvvm.lineChartType)
+                            updateUI()
                         }) {
                             Text("Death Cases")
-                                .font(.caption)
-                                .bold()
-                                .padding(10)
-                                .background(cvvm.lineChartType == .numberOfNewDeathsInLast24Hrs ? Color.secondary : .blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(5)
-                        }.disabled(cvvm.lineChartType == .numberOfNewDeathsInLast24Hrs)
+                        }
                         
                         Button(action: {
                             cvvm.lineChartType = ChartType.totalNumberOfCasesUnderIcuTreatment
-                            cvvm.fetchData(for: cvvm.lineChartType)
+                            updateUI()
                         }) {
                             Text("Current ICU Cases")
-                                .font(.caption)
-                                .bold()
-                                .padding(10)
-                                .background(cvvm.lineChartType == .totalNumberOfCasesUnderIcuTreatment ? Color.secondary : .blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(5)
-                        }.disabled(cvvm.lineChartType == .totalNumberOfCasesUnderIcuTreatment)
+                        }
                         
                         Button(action: {
                             cvvm.lineChartType = ChartType.totalNumberOfActiveCasesUndergoingTreatmentToDate
-                            cvvm.fetchData(for: cvvm.lineChartType)
+                            updateUI()
                         }) {
                             Text("Current Active")
-                                .font(.caption)
-                                .bold()
-                                .padding(10)
-                                .background(cvvm.lineChartType == .totalNumberOfActiveCasesUndergoingTreatmentToDate ? Color.secondary : .blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(5)
-                        }.disabled(cvvm.lineChartType == .totalNumberOfActiveCasesUndergoingTreatmentToDate)
+                        }
                         
                         Button(action: {
                             cvvm.lineChartType = ChartType.totalNumberOfAcuteCasesUnderHospitalTreatment
-                            cvvm.fetchData(for: cvvm.lineChartType)
+                            updateUI()
                         }) {
                             Text("Current Hospitalized")
-                                .font(.caption)
-                                .bold()
-                                .padding(10)
-                                .background(cvvm.lineChartType == .totalNumberOfAcuteCasesUnderHospitalTreatment ? Color.secondary : .blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(5)
-                        }.disabled(cvvm.lineChartType == .totalNumberOfAcuteCasesUnderHospitalTreatment)
-                        
-                        Button(action: {
-                            cvvm.lineChartType = ChartType.numberOfNewRecoveredCasesInLast24Hrs
-                            cvvm.fetchData(for: cvvm.lineChartType)
-                        }) {
-                            Text("Recoveries")
-                                .font(.caption)
-                                .bold()
-                                .padding(10)
-                                .background(cvvm.lineChartType == .numberOfNewRecoveredCasesInLast24Hrs ? Color.secondary : .blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(5)
-                        }.disabled(cvvm.lineChartType == .numberOfNewRecoveredCasesInLast24Hrs)
+                        }
                     } label: {
                         Image(systemName: "slider.horizontal.3")
                             .foregroundColor(.blue)
                     }
-                }
             })
                 .navigationTitle("Charts")
         }
+    }
+    
+    func updateUI() {
+        cvvm.getChartData(numberOfDays: cvvm.chartNumberOfDaysTab, chartType: cvvm.lineChartType) { (data) in
+            self.chartData = data
+        }
+        cvvm.fetchData()
     }
 }
 
@@ -178,7 +144,7 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
-struct LineChart: View {
+struct LineChartView: View {
     var highYValue: CGFloat
     var lowYValue: CGFloat
     var graphDataPoints: [CGFloat]

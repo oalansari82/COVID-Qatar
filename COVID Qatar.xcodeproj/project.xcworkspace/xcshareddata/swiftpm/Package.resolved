@@ -3,11 +3,11 @@
     "pins": [
       {
         "package": "SwiftUICharts",
-        "repositoryURL": "https://github.com/AppPear/ChartView.git",
+        "repositoryURL": "https://github.com/willdale/SwiftUICharts.git",
         "state": {
           "branch": null,
-          "revision": "4699847a9ac0c694666cea3acef133498952566e",
-          "version": "1.5.4"
+          "revision": "5efd625acf577a8e77417dacab3c7322dc6f9a2a",
+          "version": "2.3.2"
         }
       }
     ]

@@ -19,7 +19,7 @@ struct CovidTabView: View {
                 }
             ChartView()
                 .tabItem {
-                    Image(systemName: "chart.bar")
+                    Image(systemName: "chart.bar.xaxis")
                     Text("Chart")
                 }
             ListView()
@@ -27,7 +27,6 @@ struct CovidTabView: View {
                     Image(systemName: "clock")
                     Text("History")
                 }
-            
         }.accentColor(.maroon)
     }
 }
