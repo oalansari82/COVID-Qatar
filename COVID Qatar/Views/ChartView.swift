@@ -74,7 +74,8 @@ struct ChartView: View {
                     Text("180 Days").tag(180)
                     Text("All").tag(-1)
                 }.pickerStyle(SegmentedPickerStyle())
-                .padding()
+                .padding([.bottom, .horizontal])
+                .padding(.bottom, 10)
                 .onChange(of: cvvm.chartNumberOfDaysTab) { (_) in
                     updateUI()
                 }
