@@ -12,6 +12,7 @@ struct ChartView: View {
     
     @ObservedObject var cvvm = ChartViewViewModel()
     @State var chartData = LineChartData(dataSets: LineDataSet(dataPoints: []))
+    @State private var hasAppeared: Bool = false
     
     var body: some View {
         NavigationView {
@@ -27,10 +28,14 @@ struct ChartView: View {
                                 .floatingInfoBox(chartData: chartData)
                                 .headerBox(chartData: chartData)
                                 .legends(chartData: chartData, columns: [GridItem(.flexible()), GridItem(.flexible())])
+                                .id(chartData.id)
                                 .frame(minWidth: 150, maxWidth: 900, minHeight: 300, idealHeight: 350, maxHeight: 400, alignment: .center)
                                 .padding()
                                 .onAppear {
-                                    updateUI()    
+                                    if !hasAppeared {
+                                            updateUI()
+                                            hasAppeared = true
+                                        }
                                 }
                             if cvvm.inProgress {
                                 ProgressView()
@@ -79,11 +84,6 @@ struct ChartView: View {
                 .onChange(of: cvvm.chartNumberOfDaysTab) { (_) in
                     updateUI()
                 }
-//                Picker("", selection: $cvvm.chartType) {
-//                    Text("Line Chart").tag("line")
-//                    Text("Bar Chart").tag("bar")
-//                }.pickerStyle(SegmentedPickerStyle())
-//                .padding()
             }
             
             .toolbar(content: {
@@ -142,37 +142,5 @@ struct ChartView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ChartView()
-    }
-}
-
-struct LineChartView: View {
-    var highYValue: CGFloat
-    var lowYValue: CGFloat
-    var graphDataPoints: [CGFloat]
-    var isLoading: Bool
-    
-    var body: some View {
-        VStack {
-            HStack {
-                VStack {
-                    Text(String(format: "%.0f", highYValue))
-                        .font(.footnote)
-                    Spacer()
-                    Text(String(format: "%.0f", lowYValue))
-                        .font(.footnote)
-                }
-                Divider()
-                ZStack {
-                    LineGraph(dataPoints: graphDataPoints.reversed().normalized)
-                        .stroke(LinearGradient(gradient: Gradient(colors: [.red, .blue]), startPoint: .top, endPoint: .bottom))
-                        .frame(width: UIScreen.main.bounds.width - 60, height: 250)
-
-                    if isLoading {
-                        ProgressView()
-                    }
-                }
-            }
-            Divider()
-        }
     }
 }
